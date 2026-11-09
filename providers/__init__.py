@@ -48,6 +48,7 @@ from pathlib import Path
 from typing import Any
 
 from providers.base import ProviderProfile
+from hermes_cli._startup_fast import project_root_str
 
 logger = logging.getLogger(__name__)
 
@@ -110,7 +111,7 @@ _REGISTRATION_ONLY: ContextVar[frozenset[str] | None] = ContextVar("_provider_re
 
 # Repo-root ``plugins/model-providers/`` — populated at discovery time.
 _BUNDLED_PLUGINS_DIR = (
-    Path(__file__).resolve().parent.parent / "plugins" / "model-providers"
+    Path(project_root_str()) / "plugins" / "model-providers"
 )
 
 

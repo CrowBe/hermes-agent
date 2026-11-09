@@ -21,6 +21,7 @@ from .shared_metrics_prepared_compaction import (
     PREPARED_COMPACTION_SNAPSHOT_DIMENSIONS,
 )
 from .shared_metrics_busy import BUSY_ARRIVAL_DISPOSITIONS, BUSY_ARRIVAL_METRIC, BUSY_PEAK_FIELD, BUSY_WAIT_BUCKETS
+from hermes_cli._startup_fast import project_root_str
 
 SCHEMA_KEY = "hermes.metrics.schema_version"
 # A random per-emit token (no payload) on rows whose producer waits to learn they were SAVED: facts
@@ -191,7 +192,7 @@ SIZE_BUCKETS = frozenset({
 def _bundled_memory_providers() -> frozenset[str]:
     from pathlib import Path
 
-    root = Path(__file__).resolve().parents[2] / "plugins" / "memory"
+    root = Path(project_root_str()) / "plugins" / "memory"
     try:
         return frozenset(p.name for p in root.iterdir() if (p / "__init__.py").is_file())
     except OSError:
