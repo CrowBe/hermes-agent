@@ -23,6 +23,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Dict, Iterable, List, Sequence, Set, Tuple
 
+from hermes_agent.compat.moves import MOVES
+
 _SKIP_DIRS = frozenset({"tests", "test", "node_modules", ".git", "__pycache__", ".venv", "venv", "site-packages"})
 
 
@@ -31,7 +33,7 @@ def _hermes_top_level() -> frozenset:
     """Top-level importable names shipped by this Hermes checkout (packages and root modules)."""
     root = Path(__file__).resolve().parents[1]
     names = {p.name for p in root.iterdir() if p.is_dir() and (p / "__init__.py").is_file()}
-    names |= {p.stem for p in root.glob("*.py")}
+    names |= {p.stem for p in root.glob("*.py")} | {name.split(".")[0] for name in MOVES}
     # ``hermes_plugins.*`` is where the loader imports plugins (bundled platform adapters included):
     # rebinding another plugin's module is the same collision as rebinding core.
     return frozenset((names | {"hermes_plugins"}) - {"setup", "conftest"})

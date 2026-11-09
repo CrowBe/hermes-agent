@@ -94,6 +94,8 @@ def _add_engine(repo: Path, checker: bool = True) -> list[str]:
     for rel in _SUPPORT:
         (repo / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / rel, repo / rel)
+    shutil.copytree(REPO / "hermes_agent", repo / "hermes_agent", ignore=shutil.ignore_patterns("__pycache__"),
+                    dirs_exist_ok=True)
     _write(repo, {"tests/README.md": "os-marker-fakes scans tests/\n"})
     _write(repo, {tree if tree.endswith(".py") else f"{tree}/__init__.py": "" for tree in _SCANNED_TREES
                   if not (repo / tree).exists()})
@@ -101,7 +103,7 @@ def _add_engine(repo: Path, checker: bool = True) -> list[str]:
         shutil.copy2(REPO / "scripts/check", repo / "scripts/check")
         shutil.copytree(REPO / "scripts/code_health", repo / "scripts/code_health",
                         ignore=shutil.ignore_patterns("__pycache__"), dirs_exist_ok=True)
-    return sorted({"agent", "scripts", "tests", *_SCANNED_TREES})
+    return sorted({"agent", "hermes_agent", "scripts", "tests", *_SCANNED_TREES})
 
 
 def _engine_repo(tmp_path: Path) -> Path:
